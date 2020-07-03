@@ -3,7 +3,10 @@
 namespace App\Repositories;
 
 use App\Helper;
+use App\Models\Earning;
+use App\Models\Spending;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Collection;
 
 class TransactionRepository
 {
@@ -93,5 +96,16 @@ class TransactionRepository
         krsort($yearMonths);
 
         return $yearMonths;
+    }
+
+    public function getBySpaceId(int $spaceId): Collection
+    {
+        $earnings = Earning::where('space_id', $spaceId)
+            ->get();
+
+        $spendings = Spending::where('space_id', $spaceId)
+            ->get();
+
+        return $earnings->merge($spendings);
     }
 }
